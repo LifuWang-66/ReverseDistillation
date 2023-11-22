@@ -64,16 +64,16 @@ def evaluation_multi_proj(encoder,proj,bn, decoder, dataloader,device):
     aupro_list = []
     with torch.no_grad():
         for (img, gt, label, _, _) in dataloader:
-            start_time = time.time()
+            # start_time = time.time()
             img = img.to(device)
             inputs = encoder(img)
             features = proj(inputs)
             outputs = decoder(bn(features))     
             anomaly_map, _ = cal_anomaly_map(inputs, outputs, img.shape[-1], amap_mode='a')
             anomaly_map = gaussian_filter(anomaly_map, sigma=4)
-            end_time = time.time()
-            execution_time = end_time - start_time
-            print("Execution Time:", execution_time, "seconds")
+            # end_time = time.time()
+            # execution_time = end_time - start_time
+            # print("Execution Time:", execution_time, "seconds")
             # cv2.imshow("1",anomaly_map)
             # cv2.waitKey(0)
             gt[gt > 0.5] = 1

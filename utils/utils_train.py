@@ -114,4 +114,4 @@ class Revisit_RDLoss(nn.Module):
         loss_contrast = self.contrast(noised_feature1.view(noised_feature1.shape[0], -1), normal_proj1.view(normal_proj1.shape[0], -1), target = target) +\
                            self.contrast(noised_feature2.view(noised_feature2.shape[0], -1), normal_proj2.view(normal_proj2.shape[0], -1), target = target) +\
                            self.contrast(noised_feature3.view(noised_feature3.shape[0], -1), normal_proj3.view(normal_proj3.shape[0], -1), target = target)
-        return (loss_ssot + 0.01 * loss_reconstruct + 0.1 * loss_contrast)/1.11
+        return (loss_ssot + 0.1 * loss_reconstruct + 0.1 * loss_contrast)/1.2

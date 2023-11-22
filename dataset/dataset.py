@@ -48,8 +48,8 @@ class MVTecDataset_train(torch.utils.data.Dataset):
         self.img_paths = self.load_dataset()  # self.labels => good : 0, anomaly : 1
 
     def load_dataset(self):
-        # img_paths = glob.glob(os.path.join(self.img_path, 'good') + "/*.jpg")
-        img_paths = glob.glob(os.path.join(self.img_path, 'good') + "/*.bmp")
+        img_paths = glob.glob(os.path.join(self.img_path, 'good') + "/*.png")
+        # img_paths = glob.glob(os.path.join(self.img_path, 'good') + "/*.bmp")
         return img_paths
 
     def __len__(self):
@@ -63,18 +63,22 @@ class MVTecDataset_train(torch.utils.data.Dataset):
         ## Normal
         img_normal = self.transform(img)
         ## simplex_noise
-        size = 256
-        h_noise = np.random.randint(10, int(size//8))
-        w_noise = np.random.randint(10, int(size//8))
-        start_h_noise = np.random.randint(1, size - h_noise)
-        start_w_noise = np.random.randint(1, size - w_noise)
-        noise_size = (h_noise, w_noise)
-        simplex_noise = self.simplexNoise.rand_3d_octaves((3, *noise_size), 6, 0.6)
-        cv2.imshow('noise', simplex_noise.transpose(1,2,0))
-        cv2.waitKey(0)
-        init_zero = np.zeros((256,256,3))
-        init_zero[start_h_noise: start_h_noise + h_noise, start_w_noise: start_w_noise+w_noise, :] = 0.2 * simplex_noise.transpose(1,2,0)
-        img_noise = img + init_zero
+        # size = 256
+        # h_noise = np.random.randint(10, int(size//8))
+        # w_noise = np.random.randint(10, int(size//8))
+        # start_h_noise = np.random.randint(1, size - h_noise)
+        # start_w_noise = np.random.randint(1, size - w_noise)
+        # noise_size = (h_noise, w_noise)
+        # simplex_noise = self.simplexNoise.rand_3d_octaves((3, *noise_size), 6, 0.6) 
+        # init_zero = np.zeros((256,256,3))
+        # init_zero[start_h_noise: start_h_noise + h_noise, start_w_noise: start_w_noise+w_noise, :] = 0.2 * simplex_noise.transpose(1,2,0)
+        # img_noise = img + init_zero
+        # img_noise = self.transform(img_noise)
+        noise_image_name = str(idx) + ".png"
+        noise_img_path = os.path.join(self.img_path, "generated", noise_image_name)
+        img_noise = cv2.imread(noise_img_path)
+        img_noise = cv2.cvtColor(img_noise, cv2.COLOR_BGR2RGB)
+        img_noise = cv2.resize(img_noise/255., (256, 256))
         img_noise = self.transform(img_noise)
         return img_normal,img_noise,img_path.split('/')[-1]
 
